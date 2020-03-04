@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FriesNetworkSpoofer
 {
-    class FristHit
+    class FriesHit
     {
         public RestClient web { get;set; }
 
@@ -19,7 +19,7 @@ namespace FriesNetworkSpoofer
         //private string gameid64 { get; set; }
         //private string gameid64 { get; set; }
 
-        public FristHit()
+        public FriesHit()
         {
             this.web = new RestClient("https://mcd-games-api.lwprod.nl/");
             this.web.UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
@@ -91,6 +91,7 @@ namespace FriesNetworkSpoofer
                     addSum += 5;
                 else
                     addSum += 2;
+
                 if (currentGame.score + addSum > score)
                 {
                     addSum = score - currentGame.score; //makes it exactly 1 higher :D
