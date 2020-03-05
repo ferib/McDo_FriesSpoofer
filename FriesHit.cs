@@ -43,8 +43,8 @@ namespace FriesNetworkSpoofer
                     string topscore = LeaderbordList.topScoreData.Max(x => x.score);
                     //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
                     TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
-                    if(1==1)
-                    //if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
+                    //if(1==1)
+                    if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
                     {
                         Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
                         updateScore(Convert.ToInt32(topscoreUser.score)); //for some reason leaderbord gets already +1
@@ -118,8 +118,8 @@ namespace FriesNetworkSpoofer
                 //set start time
                 currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
 
-                //Thread.Sleep(secondsWait * 1000);
-                Console.ReadKey();
+                Thread.Sleep(secondsWait * 1000);
+                //Console.ReadKey();
                 
                 //safeScore(currentGame, (long)(startTime.AddSeconds(secondsWait).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
                 safeScore(currentGame, (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
