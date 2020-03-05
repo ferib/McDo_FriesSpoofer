@@ -31,7 +31,9 @@ namespace FriesNetworkSpoofer
 
         public void start()
         {
-            DateTime LastCheck = DateTime.MinValue;
+            //updateScore(2000);
+            //return;
+           DateTime LastCheck = DateTime.MinValue;
             while(true)
             {
                 if(LastCheck.AddMinutes(5) < DateTime.UtcNow)
@@ -41,11 +43,10 @@ namespace FriesNetworkSpoofer
                     string topscore = LeaderbordList.topScoreData.Max(x => x.score);
                     //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
                     TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
-                    if (1 == 1)
-                    // (topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
+                    if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
                     {
                         Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
-                        updateScore(Convert.ToInt32(topscoreUser.score)+1);
+                        updateScore(Convert.ToInt32(topscoreUser.score)); //for some reason leaderbord gets already +1
                     }else
                     {
                         Console.WriteLine($"We are numer one, Hey! ({topscoreUser.firstName} {topscoreUser.lastName}. {topscoreUser.score})");
@@ -122,17 +123,12 @@ namespace FriesNetworkSpoofer
                 
             }
             //kill
-            //Thread.Sleep(secondsWait * 1000);
-            while(currentGame.lives > -1)
-            {
-                secondsWait = rnd.Next(10, 30); //we die fast 1-3sec
-                currentGame.lives -= 1;
-                currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
-                startTime = DateTime.UtcNow.AddSeconds(secondsWait / 10f);
-                safeScore(currentGame, (long)(startTime.AddSeconds(1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
-                Thread.Sleep(secondsWait * 1000);
-            }
-            
+
+            secondsWait = rnd.Next(10, 30); //we die fast 1-3sec
+            currentGame.lives = -1;
+            currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
+            startTime = DateTime.UtcNow.AddSeconds(secondsWait / 10f);
+            safeScore(currentGame, (long)(startTime.AddSeconds(1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
         }
 
         public bool safeScore(GameSave gamesave, long endtime)
