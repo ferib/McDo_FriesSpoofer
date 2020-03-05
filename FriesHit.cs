@@ -43,7 +43,8 @@ namespace FriesNetworkSpoofer
                     string topscore = LeaderbordList.topScoreData.Max(x => x.score);
                     //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
                     TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
-                    if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
+                    if(1==1)
+                    //if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
                     {
                         Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
                         updateScore(Convert.ToInt32(topscoreUser.score)); //for some reason leaderbord gets already +1
@@ -68,25 +69,21 @@ namespace FriesNetworkSpoofer
             //8: 14
             //9: 15
             //10: 24
-            int[] ScoreByLevelIndex = { 24, 4, 7, 8, 9, 10, 12, 13, 14, 15 };
+            int[] ScoreByLevelIndex = { 24, 4, 6, 8, 9, 10, 12, 13, 14, 15 };
             //System.Convert.ToBase64String();
             Random rnd = new Random();
             currentGame = new GameSave();
             currentGame.lives = 3;
-            currentGame.score = 7;
+            currentGame.score = 0;
             currentGame.stage = 1;
-            currentGame.stageScore = 7;
+            currentGame.stageScore = 0;
             currentGame.startTime = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
             int secondsWait = 8;
             DateTime startTime = DateTime.UtcNow;
-            safeScore(currentGame, (long)(startTime.AddSeconds(secondsWait).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
+           // safeScore(currentGame, (long)(startTime.AddSeconds(secondsWait).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
             bool isRunning = true;
             while (isRunning)
             {
-                Thread.Sleep(secondsWait * 1000);
-                currentGame.stage += 1;
-
-
                 int addSum = ScoreByLevelIndex[(int)((currentGame.stage % 10))];
                 if (currentGame.stage % 10 == 0)
                     addSum += 5;
@@ -118,9 +115,17 @@ namespace FriesNetworkSpoofer
                     secondsWait = rnd.Next(3, 8); //first 9 stages are just spamming
                 startTime = DateTime.UtcNow;
 
+                //set start time
                 currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
-                safeScore(currentGame, (long)(startTime.AddSeconds(secondsWait).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
+
+                //Thread.Sleep(secondsWait * 1000);
+                Console.ReadKey();
                 
+                //safeScore(currentGame, (long)(startTime.AddSeconds(secondsWait).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
+                safeScore(currentGame, (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
+
+                //increase stage by 1 and send packet
+                currentGame.stage += 1;
             }
             //kill
 
