@@ -23,12 +23,12 @@ namespace FriesNetworkSpoofer
         {
             this.web = new RestClient("https://mcd-games-api.lwprod.nl/");
             this.web.UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
-            //Dennis (default app user data)
-            //id: 100000000
-            //firstname: Dennis
-            //lastname: mcdo
-            //email: dennistest@test.com
-            //mcdonaldsId: dennistest123423123123145asdfhrty3tw
+        //Dennis (default app user data)
+        //id: 100000000
+        //firstname: Dennis
+        //lastname: mcdo
+        //email: dennistest@test.com
+        //mcdonaldsId: dennistest123423123123145asdfhrty3tw
             this.gameid64 = "MGJmNDFiNzktOGI4OC00OWVmLWFmMGQtMmM3YTZjZmVlY2U3";
             this.somehash64 = "OGJlNWZlNzgzNDhkZTU4NWM1YjM3YWQ0MDYzOTZhZTMyYjA4MzJlMjI5MTBmMDkwZWFkY2E1YTdjNzdjNTYyZjEzOTViNGU2ODY0OWVmZGE4MDg2MDhkY2UwMmM3ZjRlODgzYzE3MzhhMjVkNmEyYjM4Y2FjN2NiNGEzOGMyZDk="; //used to verify user?
             this.userdata64 = "MTAwMDAwMDAw"; //userid i guess?
@@ -41,8 +41,8 @@ namespace FriesNetworkSpoofer
 
         public void start()
         {
-            updateScore(9998);
-            //return;
+            updateScore(4074);
+            return;
            DateTime LastCheck = DateTime.MinValue;
             while(true)
             {
