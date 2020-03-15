@@ -16,19 +16,22 @@ namespace FriesNetworkSpoofer
         private string somehash64 { get; set; }
         private string userdata64 { get; set; }
         private GameSave currentGame { get; set; }
+        private bool isFinished { get; set; }
+        private string lastHighScore { get; set; }
         //private string gameid64 { get; set; }
         //private string gameid64 { get; set; }
 
         public FriesHit()
         {
+            this.isFinished = true;
             this.web = new RestClient("https://mcd-games-api.lwprod.nl/");
             this.web.UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
-        //Dennis (default app user data)
-        //id: 100000000
-        //firstname: Dennis
-        //lastname: mcdo
-        //email: dennistest@test.com
-        //mcdonaldsId: dennistest123423123123145asdfhrty3tw
+            //Dennis (default app user data)
+            //id: 100000000
+            //firstname: Dennis
+            //lastname: mcdo
+            //email: dennistest@test.com
+            //mcdonaldsId: dennistest123423123123145asdfhrty3tw
             this.gameid64 = "MGJmNDFiNzktOGI4OC00OWVmLWFmMGQtMmM3YTZjZmVlY2U3";
             this.somehash64 = "OGJlNWZlNzgzNDhkZTU4NWM1YjM3YWQ0MDYzOTZhZTMyYjA4MzJlMjI5MTBmMDkwZWFkY2E1YTdjNzdjNTYyZjEzOTViNGU2ODY0OWVmZGE4MDg2MDhkY2UwMmM3ZjRlODgzYzE3MzhhMjVkNmEyYjM4Y2FjN2NiNGEzOGMyZDk="; //used to verify user?
             this.userdata64 = "MTAwMDAwMDAw"; //userid i guess?
@@ -41,33 +44,48 @@ namespace FriesNetworkSpoofer
 
         public void start()
         {
-            updateScore(4074);
-            return;
            DateTime LastCheck = DateTime.MinValue;
             while(true)
             {
-                if(LastCheck.AddMinutes(5) < DateTime.UtcNow)
+                if(LastCheck.AddMinutes(1) < DateTime.UtcNow)
                 {
                     LastCheck = DateTime.UtcNow;
                     var LeaderbordList = getLeaderbordList(100);
-                    string topscore = LeaderbordList.topScoreData.Max(x => x.score);
+                    this.lastHighScore = LeaderbordList.topScoreData.Max(x => x.score);
                     //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
                     TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
                     //if(1==1)
                     if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
                     {
                         Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
-                        updateScore(Convert.ToInt32(topscoreUser.score)); //for some reason leaderbord gets already +1
+                        updateScore(Convert.ToInt32(topscoreUser.score+1));
                     }else
                     {
                         Console.WriteLine($"We are numer one, Hey! ({topscoreUser.firstName} {topscoreUser.lastName}. {topscoreUser.score})");
                     }
                 }
+                else
+                {
+                    Random rnd = new Random();
+                    if(rnd.Next(1,20) < 25)
+                    {
+                        decimal factor = rnd.Next(100, 900) / 1000m;
+                        Console.WriteLine($"Random Play to {(Convert.ToInt32(this.lastHighScore) * factor)}");
+                        updateScore((int)(Convert.ToInt32(this.lastHighScore) * factor)); //random play?
+                    }
+                    
+                }
+                //if(!this.isFinished && DateTime.UtcNow.Hour == 22 && DateTime.UtcNow.Minute > 55)
+                //{
+                //    //5 min left, lets use that to add few more score
+                //    updateScore(this.currentGame.score + 69, true);
+
+                //}
                 Thread.Sleep(20000);
             }
         }
 
-        public void updateScore(int score)
+        public void updateScore(int score, bool finish = true)
         {
             //1: 4
             //2: 7
@@ -82,11 +100,16 @@ namespace FriesNetworkSpoofer
             int[] ScoreByLevelIndex = { 24, 4, 6, 8, 9, 10, 12, 13, 14, 15 };
             //System.Convert.ToBase64String();
             Random rnd = new Random();
-            currentGame = new GameSave();
-            currentGame.lives = 3;
-            currentGame.score = 0;
-            currentGame.stage = 1;
-            currentGame.stageScore = 0;
+            if(!(currentGame != null && currentGame.lives > 0))
+            {
+                this.isFinished = false;
+                currentGame = new GameSave();
+                currentGame.lives = 3;
+                currentGame.score = 0;
+                currentGame.stage = 1;
+                currentGame.stageScore = 0;
+            }
+            
             currentGame.startTime = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
             int secondsWait = 8;
             DateTime startTime = DateTime.UtcNow;
@@ -103,12 +126,6 @@ namespace FriesNetworkSpoofer
                 if (currentGame.score + addSum > score)
                 {
                     addSum = score - currentGame.score; //makes it exactly 1 higher :D
-                    ///Do THIS
-                    //currentGame.stage -= 1; //do not finish stage :p
-                    //currentGame.lives -= 1;
-                    //isRunning = false;
-                    
-                    ///Or THIS
                     currentGame.score += addSum;
                     currentGame.stageScore = addSum;
                     break;
@@ -138,12 +155,15 @@ namespace FriesNetworkSpoofer
                 currentGame.stage += 1;
             }
             //kill
-
-            secondsWait = rnd.Next(10, 30); //we die fast 1-3sec
-            currentGame.lives = -1;
-            currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
-            startTime = DateTime.UtcNow.AddSeconds(secondsWait / 10f);
-            safeScore(currentGame, (long)(startTime.AddSeconds(1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
+            if(finish)
+            {
+                secondsWait = rnd.Next(10, 30); //we die fast 1-3sec
+                currentGame.lives = -1;
+                currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
+                startTime = DateTime.UtcNow.AddSeconds(secondsWait / 10f);
+                safeScore(currentGame, (long)(startTime.AddSeconds(1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
+                this.isFinished = true;
+            }
         }
 
         public bool safeScore(GameSave gamesave, long endtime)
