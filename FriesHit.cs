@@ -54,7 +54,6 @@ namespace FriesNetworkSpoofer
                     this.lastHighScore = LeaderbordList.topScoreData.Max(x => x.score);
                     //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
                     TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
-                    //if(1==1)
                     if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
                     {
                         Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
