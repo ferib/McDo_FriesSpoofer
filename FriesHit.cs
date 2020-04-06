@@ -99,7 +99,7 @@ namespace FriesNetworkSpoofer
                     var LeaderbordList = getLeaderbordList(10);
                     try
                     {
-                        setScoreTo = (Convert.ToInt32(LeaderbordList.topScoreData[0].score) + Convert.ToInt32(LeaderbordList.topScoreData[1].score) + Convert.ToInt32(LeaderbordList.topScoreData[3].score) + 69) / 3;
+                        setScoreTo = (Convert.ToInt32(LeaderbordList.topScoreData[7].score) + Convert.ToInt32(LeaderbordList.topScoreData[8].score) + Convert.ToInt32(LeaderbordList.topScoreData[9].score) + 42) / 3;
                     }
                     catch { } //cba error handling this ;_;
 
