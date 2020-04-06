@@ -32,54 +32,82 @@ namespace FriesNetworkSpoofer
             //lastname: mcdo
             //email: dennistest@test.com
             //mcdonaldsId: dennistest123423123123145asdfhrty3tw
-            this.gameid64 = "MGJmNDFiNzktOGI4OC00OWVmLWFmMGQtMmM3YTZjZmVlY2U3";
-            this.somehash64 = "OGJlNWZlNzgzNDhkZTU4NWM1YjM3YWQ0MDYzOTZhZTMyYjA4MzJlMjI5MTBmMDkwZWFkY2E1YTdjNzdjNTYyZjEzOTViNGU2ODY0OWVmZGE4MDg2MDhkY2UwMmM3ZjRlODgzYzE3MzhhMjVkNmEyYjM4Y2FjN2NiNGEzOGMyZDk="; //used to verify user?
-            this.userdata64 = "MTAwMDAwMDAw"; //userid i guess?
-            //ferib userdata
             //this.gameid64 = "MGJmNDFiNzktOGI4OC00OWVmLWFmMGQtMmM3YTZjZmVlY2U3";
-            //this.somehash64 = "MTI2MmMyMmViNmYxZjY4N2JiZTAyZWU5Yzk0NDNjYTllNzk0N2M2ZTJhNGM3YmUyNzUyOWUyYWE3NzczMGM3M2U2YWU1ZjI4NzQ5NzE5MzM3MDM0MTE4MGFkMTBiNDZjNjMwOGFiNmE5NDExM2JmMTBhODk4Y2E4NDQ2ODM4MGI="; //used to verify user?
-            //this.userdata64 = "MTAwMDAxNzg4"; //userid i guess?
+            //this.somehash64 = "OGJlNWZlNzgzNDhkZTU4NWM1YjM3YWQ0MDYzOTZhZTMyYjA4MzJlMjI5MTBmMDkwZWFkY2E1YTdjNzdjNTYyZjEzOTViNGU2ODY0OWVmZGE4MDg2MDhkY2UwMmM3ZjRlODgzYzE3MzhhMjVkNmEyYjM4Y2FjN2NiNGEzOGMyZDk="; //used to verify user?
+            //this.userdata64 = "MTAwMDAwMDAw"; //userid i guess?
+            //ferib userdata
+            this.gameid64 = "MGJmNDFiNzktOGI4OC00OWVmLWFmMGQtMmM3YTZjZmVlY2U3";
+            this.somehash64 = "MTI2MmMyMmViNmYxZjY4N2JiZTAyZWU5Yzk0NDNjYTllNzk0N2M2ZTJhNGM3YmUyNzUyOWUyYWE3NzczMGM3M2U2YWU1ZjI4NzQ5NzE5MzM3MDM0MTE4MGFkMTBiNDZjNjMwOGFiNmE5NDExM2JmMTBhODk4Y2E4NDQ2ODM4MGI="; //used to verify user?
+            this.userdata64 = "MTAwMDAxNzg4"; //userid i guess?
             //FYI users are devices
         }
 
         public void start()
         {
-           DateTime LastCheck = DateTime.MinValue;
+            DateTime LastGamePlayed = DateTime.MinValue;
+            DateTime LastCheck = DateTime.MinValue;
             while(true)
             {
-                if(LastCheck.AddMinutes(1) < DateTime.UtcNow)
-                {
-                    LastCheck = DateTime.UtcNow;
-                    var LeaderbordList = getLeaderbordList(100);
-                    this.lastHighScore = LeaderbordList.topScoreData.Max(x => x.score);
-                    //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
-                    TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
-                    if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
-                    {
-                        Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
-                        updateScore(Convert.ToInt32(topscoreUser.score+1));
-                    }else
-                    {
-                        Console.WriteLine($"We are numer one, Hey! ({topscoreUser.firstName} {topscoreUser.lastName}. {topscoreUser.score})");
-                    }
-                }
-                else
-                {
-                    Random rnd = new Random();
-                    if(rnd.Next(1,20) < 25)
-                    {
-                        decimal factor = rnd.Next(100, 900) / 1000m;
-                        Console.WriteLine($"Random Play to {(Convert.ToInt32(this.lastHighScore) * factor)}");
-                        updateScore((int)(Convert.ToInt32(this.lastHighScore) * factor)); //random play?
-                    }
-                    
-                }
-                //if(!this.isFinished && DateTime.UtcNow.Hour == 22 && DateTime.UtcNow.Minute > 55)
-                //{
-                //    //5 min left, lets use that to add few more score
-                //    updateScore(this.currentGame.score + 69, true);
 
+                //#===========================#
+                //#      ~ Old Methode ~      #
+                //#===========================#
+
+
+                //if(LastCheck.AddMinutes(1) < DateTime.UtcNow)
+                //{
+                //    LastCheck = DateTime.UtcNow;
+                //    var LeaderbordList = getLeaderbordList(100);
+                //    this.lastHighScore = LeaderbordList.topScoreData.Max(x => x.score);
+                //    //TopScoreData topscoreUser = LeaderbordList.topScoreData.Find(x => x.score == topscore);
+                //    TopScoreData topscoreUser = LeaderbordList.topScoreData.FirstOrDefault();
+                //    if(topscoreUser != null && (topscoreUser.firstName != "Ferib" || topscoreUser.lastName != "H"))
+                //    {
+                //        Console.WriteLine($"{topscoreUser.firstName} {topscoreUser.lastName}. is #1 with {topscoreUser.score}... emulating our score to {Convert.ToInt32(topscoreUser.score)+1}");
+                //        updateScore(Convert.ToInt32(topscoreUser.score+1));
+                //    }else
+                //    {
+                //        Console.WriteLine($"We are numer one, Hey! ({topscoreUser.firstName} {topscoreUser.lastName}. {topscoreUser.score})");
+                //    }
                 //}
+                //else
+                //{
+                //    Random rnd = new Random();
+                //    if(rnd.Next(1,20) < 25)
+                //    {
+                //        decimal factor = rnd.Next(100, 900) / 1000m;
+                //        Console.WriteLine($"Random Play to {(Convert.ToInt32(this.lastHighScore) * factor)}");
+                //        updateScore((int)(Convert.ToInt32(this.lastHighScore) * factor)); //random play?
+                //    }
+                //}
+
+                //#===========================#
+                //#     ~ 1 Game a Day ~      #
+                //#===========================#
+
+                if(LastGamePlayed.Day != DateTime.UtcNow.Day && DateTime.UtcNow.Hour >= 20)
+                {
+                    //We haven't played today and its after 20:00:00 UTC+0
+                    LastGamePlayed = DateTime.UtcNow;
+                    Random rnd = new Random();
+                    var sleepMin = rnd.Next(0, 31);
+                    Console.WriteLine($"Sleeping for {sleepMin} minutes...");
+                    Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
+
+                    //get leaderboard data
+                    int setScoreTo = rnd.Next(1700, 3500); //fallback when scoreboard info fails, these score are 'above average'
+                    var LeaderbordList = getLeaderbordList(10);
+                    try
+                    {
+                        setScoreTo = (Convert.ToInt32(LeaderbordList.topScoreData[0].score) + Convert.ToInt32(LeaderbordList.topScoreData[1].score) + Convert.ToInt32(LeaderbordList.topScoreData[3].score) + 69) / 3;
+                    }
+                    catch { } //cba error handling this ;_;
+
+                    //emulate score
+                    Console.WriteLine($"Emulating score to {setScoreTo}");
+                    updateScore(setScoreTo);
+                }
+
                 Thread.Sleep(20000);
             }
         }
