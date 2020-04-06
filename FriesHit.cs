@@ -37,8 +37,8 @@ namespace FriesNetworkSpoofer
             //this.userdata64 = "MTAwMDAwMDAw"; //userid i guess?
             //ferib userdata
             this.gameid64 = "MGJmNDFiNzktOGI4OC00OWVmLWFmMGQtMmM3YTZjZmVlY2U3";
-            this.somehash64 = "MTI2MmMyMmViNmYxZjY4N2JiZTAyZWU5Yzk0NDNjYTllNzk0N2M2ZTJhNGM3YmUyNzUyOWUyYWE3NzczMGM3M2U2YWU1ZjI4NzQ5NzE5MzM3MDM0MTE4MGFkMTBiNDZjNjMwOGFiNmE5NDExM2JmMTBhODk4Y2E4NDQ2ODM4MGI="; //used to verify user?
-            this.userdata64 = "MTAwMDAxNzg4"; //userid i guess?
+            this.somehash64 = "NDZjMzhmNWFiODRlOWU4N2E3NmUyNDhkM2EyNTk3NzFmOTEwYzFkZDRmNjQyYjc4M2E0OThlMjRkOTE5MWJiMDIxZThkN2E3OWRlNzg5NzE4Mzc5NjM1ZDY4MjI0MzJmNGZmZWVhNmMwYzVhYmI1ZDc0Mjk3NWQyZjJjMzE0N2Q="; //token obtained from '/users/register'
+            this.userdata64 = "MTAwMDA0NzAzNA=="; //userid i guess?
             //FYI users are devices
         }
 
@@ -92,7 +92,7 @@ namespace FriesNetworkSpoofer
                     Random rnd = new Random();
                     var sleepMin = rnd.Next(0, 31);
                     Console.WriteLine($"Sleeping for {sleepMin} minutes...");
-                    Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
+                    //Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
 
                     //get leaderboard data
                     int setScoreTo = rnd.Next(1700, 3500); //fallback when scoreboard info fails, these score are 'above average'
@@ -195,17 +195,20 @@ namespace FriesNetworkSpoofer
 
         public bool safeScore(GameSave gamesave, long endtime)
         {
+            string status64 = "MA=="; //aob(0)
+            if (gamesave.lives == 0)
+                status64 = "MQ=="; //aob(1)
             Console.WriteLine($"lives: {currentGame.lives}\nscore: {currentGame.score}\nstage: {currentGame.stage}\nstartTime: {currentGame.startTime}\nenTime: {endtime}\n{DateTime.Now.ToString("HH:mm:ss")}");
             //Console.WriteLine(gamesave.score);
             return safeScore(System.Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(gamesave))),
                 System.Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(gamesave.startTime))),
-                System.Convert.ToBase64String(Encoding.ASCII.GetBytes(endtime.ToString())));
+                System.Convert.ToBase64String(Encoding.ASCII.GetBytes(endtime.ToString())), status64);
         }
 
-        public bool safeScore(string scoredata64, string starttime64, string endtime64)
+        public bool safeScore(string scoredata64, string starttime64, string endtime64, string isdead64)
         {
             //Console.WriteLine($"a: {this.gameid64}\nb: {this.somehash64}\nc: {scoredata64}\nd: {starttime64}\ne: {endtime64}\nf: {this.userdata64}\n");
-            var request = new RestRequest($"games/saveScore?a={gameid64}&b={somehash64}&c={scoredata64}&d={starttime64}&e={endtime64}&f={userdata64}", Method.POST);
+            var request = new RestRequest($"games/saveScore?a={gameid64}&b={somehash64}&c={scoredata64}&d={starttime64}&e={endtime64}&f={userdata64}&g={isdead64}", Method.POST);
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             var response = this.web.Execute(request);
             Console.WriteLine(response.StatusCode);
