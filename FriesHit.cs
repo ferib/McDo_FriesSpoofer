@@ -196,7 +196,7 @@ namespace FriesNetworkSpoofer
         public bool safeScore(GameSave gamesave, long endtime)
         {
             string status64 = "MA=="; //aob(0)
-            if (gamesave.lives == 0)
+            if (gamesave.lives <= 0)
                 status64 = "MQ=="; //aob(1)
             Console.WriteLine($"lives: {currentGame.lives}\nscore: {currentGame.score}\nstage: {currentGame.stage}\nstartTime: {currentGame.startTime}\nenTime: {endtime}\n{DateTime.Now.ToString("HH:mm:ss")}");
             //Console.WriteLine(gamesave.score);
