@@ -92,7 +92,7 @@ namespace FriesNetworkSpoofer
                     Random rnd = new Random();
                     var sleepMin = rnd.Next(0, 31);
                     Console.WriteLine($"Sleeping for {sleepMin} minutes...");
-                    //Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
+                    Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
 
                     //get leaderboard data
                     int setScoreTo = rnd.Next(1700, 3500); //fallback when scoreboard info fails, these score are 'above average'
