@@ -102,14 +102,14 @@ namespace FriesNetworkSpoofer
                 //#     ~ 1 Game a Day ~      #
                 //#===========================#
 
-                if(LastGamePlayed.Day != DateTime.UtcNow.Day && DateTime.UtcNow.Hour >= 20)
+                if(LastGamePlayed.Day != DateTime.UtcNow.Day && DateTime.UtcNow.Hour >= 0)
                 {
                     //We haven't played today and its after 20:00:00 UTC+0
                     LastGamePlayed = DateTime.UtcNow;
                     Random rnd = new Random();
                     var sleepMin = rnd.Next(0, 31);
                     Console.WriteLine($"Sleeping for {sleepMin} minutes...");
-                    Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
+                    //Thread.Sleep(sleepMin * 1000 * 60); //delay between 0 ~ 30 minutes
 
                     //clean mess
                     Console.Clear();
@@ -209,7 +209,7 @@ namespace FriesNetworkSpoofer
             if(finish)
             {
                 secondsWait = rnd.Next(10, 30); //we die fast 1-3sec
-                currentGame.lives = -1;
+                currentGame.lives = 0;
                 currentGame.startTime = (long)(startTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000;
                 startTime = DateTime.UtcNow.AddSeconds(secondsWait / 10f);
                 safeScore(currentGame, (long)(startTime.AddSeconds(1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds * 1000);
@@ -220,7 +220,7 @@ namespace FriesNetworkSpoofer
         public bool safeScore(GameSave gamesave, long endtime)
         {
             string status64 = "MA=="; //aob(0)
-            if (gamesave.lives <= 0)
+            if (gamesave.lives == 0)
                 status64 = "MQ=="; //aob(1)
             bool isok = safeScore(System.Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(gamesave))),
                 System.Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(gamesave.startTime))),
